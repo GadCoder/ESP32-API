@@ -32,3 +32,8 @@ def read_metric(metric_id: int, db: Session = Depends(get_db)):
 def read_items(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     metrics = crud.get_all_metrics(db, skip=skip, limit=limit)
     return metrics
+
+
+@app.delete("/metrics/delete-all-metrics/")
+def delete_all_metrics(db: Session = Depends(get_db)):
+    return crud.delete_all_metrics(db=db)

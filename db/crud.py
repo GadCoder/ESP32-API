@@ -17,3 +17,15 @@ def create_metric(db: Session, metric: schemas.MetricCreate):
 
 def get_all_metrics(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.Metric).offset(skip).limit(limit).all()
+
+
+def delete_all_metrics(db: Session):
+    try:
+        db.execute("DELETE FROM ESP32Metrics;")
+        db.commit()
+        return {"message": "All rows deleted successfully"}
+    except Exception as e:
+        db.rollback()
+        return {"message": f"An error occurred: {str(e)}"}
+    finally:
+        db.close()

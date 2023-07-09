@@ -10,8 +10,8 @@ router = APIRouter()
 
 
 @router.get("/pills/is_pill_time/")
-def is_pill_time(day: str, time: str, db: Session = Depends(get_db)):
-    pill_asigned = get_is_pill_time(day=day, time=time, db=db)
+def is_pill_time(db: Session = Depends(get_db)):
+    pill_asigned = get_is_pill_time(db=db)
     if pill_asigned is None:
         raise HTTPException(
             status_code=404, detail="There's not pill asignned to this time and day")

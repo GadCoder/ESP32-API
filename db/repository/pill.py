@@ -2,6 +2,8 @@ from sqlalchemy import text
 from sqlalchemy.orm import Session
 from db.models.pill import Pill
 from db.schemas.pill import PillCreate
+from datetime import datetime
+import pytz
 
 
 def get_pill(db: Session, pill_id: int):
@@ -32,5 +34,18 @@ def delete_all_pills(db: Session):
         db.close()
 
 
-def get_is_pill_time(day: str, time: str, db: Session):
-    return db.query(Pill).filter(Pill.day == day, Pill.time == time).first()
+def get_is_pill_time(db: Session):
+    # Specify the desired timezone
+    timezone = pytz.timezone('America/Lima')
+
+    # Get the current datetime in the specified timezone
+    current_datetime = datetime.now(timezone)
+
+    # Extract the day, hour, and minute components
+    current_day = current_datetime.strftime('%A')  # Full weekday name
+    current_hour = current_datetime.strftime('%H')  # Hour in 24-hour format
+    current_minute = current_datetime.strftime('%M')  # Minute
+    current_time = current_hour + ":" + current_minute
+    print(current_day)
+    print(current_time)
+    return db.query(Pill).filter(Pill.day == current_day, Pill.time == current_time).first()

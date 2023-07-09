@@ -1,9 +1,7 @@
 from pydantic import BaseModel
-from datetime import datetime
 
 
 class MetricBase(BaseModel):
-    record_time = datetime
     value: float
     type: str
 

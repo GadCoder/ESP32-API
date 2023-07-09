@@ -1,14 +1,15 @@
+from sqlalchemy import text
 from sqlalchemy.orm import Session
-
-from . import models, schemas
+from db.models.metric import Metric
+from db.schemas.metric import MetricCreate
 
 
 def get_metric(db: Session, metric_id: int):
-    return db.query(models.Metric).filter(models.Metric.id == metric_id).first()
+    return db.query(Metric).filter(Metric.id == metric_id).first()
 
 
-def create_metric(db: Session, metric: schemas.MetricCreate):
-    db_item = models.Metric(**metric.dict())
+def create_new_metric(db: Session, metric: MetricCreate):
+    db_item = Metric(**metric.dict())
     db.add(db_item)
     db.commit()
     db.refresh(db_item)
@@ -16,12 +17,12 @@ def create_metric(db: Session, metric: schemas.MetricCreate):
 
 
 def get_all_metrics(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(models.Metric).offset(skip).limit(limit).all()
+    return db.query(Metric).offset(skip).limit(limit).all()
 
 
 def delete_all_metrics(db: Session):
     try:
-        db.execute("DELETE FROM ESP32Metrics;")
+        db.execute(text("DELETE FROM ESP32Metrics;"))
         db.commit()
         return {"message": "All rows deleted successfully"}
     except Exception as e:
